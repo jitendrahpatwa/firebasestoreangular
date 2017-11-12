@@ -1,23 +1,39 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList, AngularFireObject } from 'angularfire2/database';
-import { Item } from './item';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 
 @Injectable()
-export class ItemService {
+export class DumService {
 
-  private basePath = '/items';
+  private basePath = '/dumb'; //rdb obj list
 
-  itemsRef: AngularFireList<Item>;
-  itemRef:  AngularFireObject<Item>;
+  itemsRef: AngularFireList<any>;
+  itemRef:  AngularFireObject<any>;
 
-  items: Observable<Item[]>; //  list of objects
-  item:  Observable<Item>;   //   single object
+  items: Observable<any[]>; //  list of objects
+  item:  Observable<any>;   //   single object
 
 
   constructor(private db: AngularFireDatabase) {
-    this.itemsRef = db.list('/items')
+    this.itemsRef = db.list('/dumb')
+    console.log('called');
+  }
+
+  dis(product):void{
+    console.log('loaded');
+    let a = this.itemsRef.push({
+        samay:"item "+product,
+        product:product
+    });
+    console.log(a);
+  }
+  vie(){
+    return this.itemsRef.snapshotChanges().map(arr => {
+        return arr.map(snap => Object.assign(
+          snap.payload.val(), { $key: snap.key }) 
+        )
+    })
   }
 
   // Return an observable list with optional query
@@ -32,16 +48,15 @@ export class ItemService {
     })
   }
 
-
   // Return a single observable item
-  getItem(key: string): Observable<Item> {
+  getItem(key: string): Observable<any> {
     const itemPath = `${this.basePath}/${key}`;
     this.item = this.db.object(itemPath).valueChanges();
     return this.item
   }
 
   // Create a bramd new item
-  createItem(item: Item): void {
+  createItem(item: any): void {
     this.itemsRef.push(item)
   }
 

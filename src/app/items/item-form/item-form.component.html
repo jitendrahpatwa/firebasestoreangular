@@ -15,6 +15,16 @@
     <button class="button is-primary" (click)='createItem()' [disabled]="!title.valid">Create</button>
 
 
+    <p>Dummy products</p><br>
+    <div *ngFor="let p of productItems | async">
+      <h5>{{ p.product }}</h5>
+    </div>
+    <input placeholder="product Title" class="input"
+    [(ngModel)]="product"
+    required minlength="2" maxlength="23"
+   autofocus>
+    <button class="button is-primary" (click)='createItem2()'>Create product</button>
+
 <ng-template #valid>
   <p class="help is-success">looks good!</p>
 </ng-template>
